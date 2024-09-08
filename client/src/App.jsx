@@ -7,7 +7,7 @@ import { Icon } from 'leaflet';
 function App() {
     const [markers,setMarkers] = useState([]);
     useEffect(()=>{
-    const socket = io("http://localhost:4000");
+    const socket = io("https://location-tracker-i8d5.onrender.com");
     let watchId;
     if(navigator.geolocation){
       watchId = navigator.geolocation.watchPosition((position)=>{
