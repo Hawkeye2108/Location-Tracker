@@ -24,6 +24,7 @@ io.on("connection",(socket)=>{
     })
 
     socket.on("disconnect", () => {
+        io.emit("remove-marker",{id:socket.id});
         console.log('Client disconnected:', socket.id);
     });
 })
