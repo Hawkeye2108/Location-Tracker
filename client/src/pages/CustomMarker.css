@@ -1,0 +1,63 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.marker {
+    /* margin: 40px; */
+    /* background-color: yellow; */
+    height: 50px;
+    width: 30px;
+    position: relative;
+  }
+  
+  .marker-icon {
+    background-color: green;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    top: 0;
+    left: 20%;
+    transform: translateX(-50%);
+    border-radius: 100%;
+    z-index: 2;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .marker-icon img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .marker-body {
+    /*width: 0;*/
+    /*height: 0;*/
+    /*border-width: 40px 25px 40px 25px;*/
+     /*Adjusted the values to match the width of the marker */
+    /*border-style: solid;*/
+    /*border-top: transparent;*/
+    /*border-right: transparent;*/
+    /*border-bottom: 40px solid red; */
+    /* Adjusted color and width */
+    /*border-left: transparent;*/
+    /*position: absolute;*/
+    /*bottom: -40px; */
+    /* Position it below the .marker */
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent; /* Half of the width of the marker */
+    border-right: 15px solid transparent; /* Half of the width of the marker */
+    border-top: 30px solid red; /* Height of the triangle */
+    position: absolute;
+    bottom: 0px; /* Adjust this based on the height of the triangle */
+    left: 20%;
+    transform: translateX(-50%);
+  }
