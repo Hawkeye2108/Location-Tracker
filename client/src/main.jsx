@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import { UserProvider } from './context.js/userContext.jsx'
-import {createBrowserRouter, RouterProvider} from "react-router-dom"
+import { UserContext, UserProvider } from './context.js/userContext.jsx'
+import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom"
 import MapPage from './pages/MapPage.jsx'
 
+// Create a custom route component that handles the conditional rendering
+const ProtectedMapRoute = () => {
+  const { users } = useContext(UserContext);
+  return users.length === 0 ? <Navigate to="/"/> : <MapPage />;
+};
 const router = createBrowserRouter([
   {
     path:"/",
@@ -13,7 +18,7 @@ const router = createBrowserRouter([
   },
   {
     path:"/map",
-    element:<MapPage/>
+    element:<ProtectedMapRoute/>
   }
 ])
 

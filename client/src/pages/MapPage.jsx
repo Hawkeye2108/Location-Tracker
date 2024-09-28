@@ -21,40 +21,44 @@ const MapCenterUpdater = ({ center }) => {
 
 
 function MapPage() {
-   const {users,addUsers,deleteUsers,updateUsers} = useContext(UserContext);
+   const {users,addUsers,deleteUsers,updateUsers,updateUserLocation,socket} = useContext(UserContext);
    console.log("users = ",users);
+   console.log("socket id = ",socket);
 
-
-    const [yourLocation, setYourLocation] = useState([25,25]);
+   
+    const [yourLocation, setYourLocation] = useState([users[0].latitude,users[0].longitude]);
     const [markers,setMarkers] = useState([]);
     const [id,setId] = useState();
-    const [yourData,setYourData] = useState(null);
+    const [yourData,setYourData] = useState(...users);
 
     useEffect(()=>{
-      // navigator.geolocation.getCurrentPosition((pos)=>{
-      //   setYourLocation([pos.coords.latitude,pos.coords.longitude])
-      // })
 
-
-
-    const socket = io("https://location-tracker-i8d5.onrender.com");
-    console.log("initial socket id = ",socket.id);
-    socket.on("connect",()=>{
-      console.log("socket connect id = ",socket.id);
-      updateUsers(socket.id);
-      setYourData(...users);
-    })
+    // // Connection to socket
+    // const socket = io("https://location-tracker-i8d5.onrender.com");
+    // // console.log("initial socket id = ",socket.id);
+    // socket.on("connect",()=>{
+    //   // console.log("socket connect id = ",socket.id);
+    //   updateUsers(socket.id);
+    //   console.log("sendind data");
+    //   socket.emit("send-location",{...yourData,id:socket.id});
+    //   const [yourLocationData] = users;
+    //   setYourData({...yourLocationData,id:socket.id});
+    // })
+    
     // // Capture user ID when connected
     // socket.on("connect", () => {
     //   setUserId(socket.id);
     // });
+
+    
     let watchId;
     if(navigator.geolocation){
       watchId = navigator.geolocation.watchPosition((position)=>{
         const {latitude,longitude} = position.coords;
-        // console.log({latitude,longitude})
         setYourLocation([latitude,longitude]);
         // socket.emit("send-location", {latitude,longitude});
+        // console.log("send locayion = ",{...yourData});
+        // console.log("send locayion = ",{...yourData,latitude,longitude});
         socket.emit("send-location", {...yourData,latitude,longitude});
       },
       (error)=>{
@@ -71,26 +75,23 @@ function MapPage() {
 
     socket.on("receive-location",(data)=>{
       const {id,latitude,longitude} = data;
-      console.log('Received location:', { id, latitude, longitude });
-      console.log("sockedt.id = ",socket.id)
-      // setMarkers((prevMarkers)=>{
-      //   console.log("previous Markers = ",prevMarkers);
-      //   const markerExist = prevMarkers.find(marker=>marker.id===id);
-      //   if(markerExist){
-      //      return prevMarkers.map(marker=>
-      //      marker.id===id?{id,latitude,longitude}:marker);
-      //   }
-      //   else{
-      //      return [...prevMarkers, {id,latitude,longitude}];
-      //   }
-      //  })
-        console.log("addUsers data = ",data);
+      console.log('Received location data = ', data);
+      // console.log("sockedt.id = ",socket.id);
+       const existingUser = users.find(user => user.id===id);
+        if(existingUser){
+         // Update the existing user's location
+         updateUserLocation(id,data);
+         return ;
+        }
+        // console.log("addUsers data = ",data);
+        console.log("receiving data");
+        // If user does not exist, add them to the state
         addUsers(data);
       })
      
       // To clean up marker if a user is disconnected
       socket.on("remove-marker",({id})=>{
-        // setMarkers((prevMarkers)=> prevMarkers.filter((marker)=> marker.id!=id))
+      //   // setMarkers((prevMarkers)=> prevMarkers.filter((marker)=> marker.id!=id))
         deleteUsers(id);
       })
       
@@ -104,6 +105,9 @@ function MapPage() {
     },[]);
 
     
+
+
+    console.log("     Renders    ")
     const createCustomMarker = (image)=>{
      return L.divIcon({
       className: 'custom-marker',
@@ -118,6 +122,10 @@ function MapPage() {
     });
   }
     
+  console.log("yourData = ",yourData);
+
+
+
   return (
     <>
       <MapContainer center={yourLocation} zoom={13}
