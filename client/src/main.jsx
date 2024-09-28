@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import { UserContext, UserProvider } from './context.js/userContext.jsx'
+import { UserContext, UserProvider } from './context/userContext.jsx'
 import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom"
 import MapPage from './pages/MapPage.jsx'
 

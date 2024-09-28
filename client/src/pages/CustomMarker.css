@@ -1,8 +1,8 @@
-*{
+/* *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
+} */
 .marker {
     /* margin: 40px; */
     /* background-color: yellow; */
@@ -29,9 +29,10 @@
   
   .marker-icon img{
     height: 100%;
+    min-width: 100%;
     width: 100%;
-    object-fit: contain;
-    border-radius: 50%;
+    object-fit: cover;
+    /* border-radius: 50%; */
     cursor: pointer;
   }
   .marker-body {

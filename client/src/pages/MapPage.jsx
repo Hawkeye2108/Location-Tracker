@@ -5,7 +5,8 @@ import "leaflet/dist/leaflet.css";
 import { Icon, marker } from 'leaflet';
 import L from "leaflet";
 import "./CustomMarker.css"
-import { UserContext } from '../context.js/userContext';
+import { UserContext } from '../context/userContext.jsx';
+import UserWidow from '../components/UserWindow.jsx';
 
 // Component to update map center
 const MapCenterUpdater = ({ center }) => {
@@ -23,9 +24,10 @@ const MapCenterUpdater = ({ center }) => {
 function MapPage() {
    const {users,addUsers,deleteUsers,updateUsers,updateUserLocation,socket} = useContext(UserContext);
    console.log("users = ",users);
-   console.log("socket id = ",socket);
+  //  console.log("socket id = ",socket);
 
-   
+    // userProfile state to open profile
+    const [userProfile,setUserProfile] = useState(null);
     const [yourLocation, setYourLocation] = useState([users[0].latitude,users[0].longitude]);
     const [markers,setMarkers] = useState([]);
     const [id,setId] = useState();
@@ -68,7 +70,7 @@ function MapPage() {
       {
         enableHighAccuracy:true,
       //   timeout:5000,
-      //   maximumAge:0
+        // maximumAge:0
       }
       )
     }
@@ -77,6 +79,7 @@ function MapPage() {
       const {id,latitude,longitude} = data;
       console.log('Received location data = ', data);
       // console.log("sockedt.id = ",socket.id);
+      console.log("users state in receive location = ",users);
        const existingUser = users.find(user => user.id===id);
         if(existingUser){
          // Update the existing user's location
@@ -125,9 +128,13 @@ function MapPage() {
   console.log("yourData = ",yourData);
 
 
-
+  const openProfile = (user)=>{
+    // alert(user.name);
+    setUserProfile(user);
+  }
   return (
-    <>
+    <> 
+      {userProfile && <UserWidow userProfile={userProfile} setUserProfile={setUserProfile}/>}
       <MapContainer center={yourLocation} zoom={13}
        style={{height:"100vh",width:"100%"}}>
         <TileLayer
@@ -135,13 +142,14 @@ function MapPage() {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
         <MapCenterUpdater center={yourLocation}/>
-        { users?.map((user,index)=><Marker key={index}
+        { users?.map((user,index)=>
+          <Marker key={index}
            position={[user.latitude,user.longitude]}
            icon={createCustomMarker(user.image)}
+           eventHandlers={{click:()=>openProfile(user)}}
           >
-            <Popup><h4>{user.name}</h4></Popup>
+            {/* <Popup><h4>{user.name}</h4></Popup> */}
           </Marker>
-
         )}      
     
       </MapContainer>

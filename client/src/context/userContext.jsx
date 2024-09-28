@@ -33,6 +33,12 @@ const UserProvider = ({children})=>{
         console.log("users state in addUsers = ",users);
         let userExists = false;
         console.log("users length = ",users.length);
+        // const existingUser = users.find(u => u.id===user.id);
+        // if(existingUser){
+        //  // Update the existing user's location
+        //  updateUserLocation(id,data);
+        //  return ;
+        // }
         // for(let i=0;i<users.length;i++){
         //     console.log(`users[${i}].id = ${users[i].id}`);
         //     console.log(`user.id = ${user.id}`);
@@ -51,7 +57,16 @@ const UserProvider = ({children})=>{
         //    updateUserLocation(user);
         // }
         // else
-        setUsers((prevUser) => [...prevUser,user]);
+        setUsers((prevUser) =>{
+        const existingUser = prevUser.find(u => u.id === user.id);
+        if (existingUser) {
+            // Update the existing user's location directly here and not call updateUserLocation
+            return prevUser.map(u =>
+                u.id === user.id ? { ...u, ...user } : u
+            );
+        }  
+        return [...prevUser,user];
+        });
     }
 
     // Method to delete user
@@ -69,9 +84,12 @@ const UserProvider = ({children})=>{
     }
     
     const updateUserLocation = (id,updatedData)=>{
+        console.log("updated id = ",id);
+        console.log("updated data = ",updatedData);
         setUsers((prevUser)=>{
+            console.log("updated prevUser = ",prevUser);
             return prevUser.map(user=>
-              user.id===id?{...user,updatedData}:user
+              user.id===id?{...updatedData}:user
             );
         });
     };

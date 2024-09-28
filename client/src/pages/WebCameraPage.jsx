@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react'
 import WebCam from "react-webcam"
 import {NavLink} from "react-router-dom"
-import { UserContext } from '../context.js/userContext'
+import { UserContext } from '../context/userContext'
 
 const WebCameraPage = () => {
   const {users,addUsers,socket} = useContext(UserContext);
@@ -83,7 +83,7 @@ const WebCameraPage = () => {
       <h2 style={{fontWeight:"bold",textAlign:"center"}}>Click a Photo For Marker</h2>
       <div style={{background: "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(151,167,184,1) 0%, rgba(0,0,0,1) 100%)",width:'350px',height:'350px',display:"flex",alignItems:"center",margin:8}}>
       {imageSrc?
-      <img src={imageSrc} alt="Image" style={{display:"flex", alignItems:"center"}}/>:      
+      <img src={imageSrc} alt="Image" style={{display:"flex", alignItems:"center",width:"100%",height:"100%",objectFit:"contain"}}/>:      
       <WebCam width={"100%"} height={"100%"} ref={webcamRef} screenshotFormat='image/jpeg' screenshotQuality={0.9}/>
       }
       </div>
